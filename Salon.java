@@ -1,0 +1,595 @@
+
+import javax.swing.*;
+import java.awt.event.*;
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+/**
+ *
+ * @author emerio
+ */
+public class Salon extends javax.swing.JFrame {
+
+    /**
+     * Creates new form TugasHER
+     */
+    // Membuat objek salon untuk mengelola layanan dan perhitungan harga
+    private SalonService salonService = new SalonService();
+    
+    public Salon() {
+        // Inisialisasi komponen GUI
+        initComponents();
+
+        // Mengatur text field tidak dapat diubah
+        jTextFieldHarga.setEditable(false);
+        jTextDiskon.setEditable(false);
+        jTextFieldTotalBayar.setEditable(false);
+
+        // Mengatur text field tidak dapat difokuskan (tidak bisa di-klik)
+        jTextFieldHarga.setFocusable(false);
+        jTextDiskon.setFocusable(false);
+        jTextFieldTotalBayar.setFocusable(false);
+
+        // Daftar layanan salon
+        String[] layanan = {"= Pilih =", "Gunting Rambut", "Luluran"};
+        jComboBoxPilihanPerawatan.setModel(new javax.swing.DefaultComboBoxModel<>(layanan));
+        nonaktif(); // Panggil metode nonaktif() untuk membuat elemen GUI menjadi nonaktif saat aplikasi dibuka
+
+        // Menambahkan event listener untuk frame
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                aktif();
+            }
+        });
+
+        // Buat objek ButtonGroup
+        ButtonGroup buttonGroup = new ButtonGroup();
+        // Tambahkan kedua JRadioButton ke dalam ButtonGroup
+        buttonGroup.add(jRadioButtonMember);
+        buttonGroup.add(jRadioButtonNonMember);
+
+        // Menambahkan action listener untuk jRadioButtonMember dan jRadioButtonNonMember
+        jRadioButtonMember.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jRadioButtonMemberActionPerformed(e);
+            }
+        });
+
+        jRadioButtonNonMember.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+    }
+
+    // Kelas salon untuk mengelola layanan dan perhitungan harga
+    public class SalonService {
+
+        // Definisi harga layanan dan diskon
+        private int haircutPrice = 50000;
+        private int luluranPrice = 75000;
+        private int spaPrice = 200000;
+        private int massagePrice = 100000;
+        private double memberDiscount = 0.1;
+        private boolean memberStatus = false;
+
+        // Setter untuk status keanggotaan
+        public void setMemberStatus(boolean status) {
+            memberStatus = status;
+        }
+
+        // Getter untuk diskon anggota
+        public double getMemberDiscount() {
+            return memberStatus ? memberDiscount : 0;
+        }
+
+        // Getter untuk harga layanan tertentu
+        public int getServicePrice(String service) {
+            switch (service) {
+                case "Gunting Rambut":
+                    return haircutPrice;
+                case "Luluran":
+                    return luluranPrice;
+                case "SPA":
+                    return spaPrice;
+                case "Massage":
+                    return massagePrice;
+                default:
+                    return 0;
+            }
+        }
+
+        // Getter untuk harga SPA
+        public int spaPrice() {
+            return spaPrice;
+        }
+
+        // Getter untuk harga Massage
+        public int massagePrice() {
+            return massagePrice;
+        }
+
+        // Getter untuk harga Gunting Rambut
+        public int getHaircutPrice() {
+            return haircutPrice;
+        }
+
+        // Getter untuk harga Luluran
+        public int getLuluranPrice() {
+            return luluranPrice;
+        }
+
+        // Method untuk menghitung harga akhir setelah diskon
+        public double calculatePrice(int harga, double diskon) {
+            return harga - (harga * diskon);
+        }
+
+        // Getter untuk status keanggotaan
+        public boolean isMemberStatus() {
+            return memberStatus;
+        }
+
+        // Method untuk menghitung biaya tambahan jika layanan tambahan dipilih
+        private int additionalCharges(JCheckBox[] checkBoxes) {
+            int additionalCharges = 0;
+            for (JCheckBox checkBox : checkBoxes) {
+                if (checkBox.isSelected()) {
+                    String service = checkBox.getText();
+                    additionalCharges += getServicePrice(service);
+                }
+            }
+            return additionalCharges;
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBoxPilihanPerawatan = new javax.swing.JComboBox<>();
+        jTextFieldHarga = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jRadioButtonMember = new javax.swing.JRadioButton();
+        jRadioButtonNonMember = new javax.swing.JRadioButton();
+        jPanel3 = new javax.swing.JPanel();
+        checkBoxSPA = new javax.swing.JCheckBox();
+        checkBoxMassage = new javax.swing.JCheckBox();
+        jTextDiskon = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jTextFieldTotalBayar = new javax.swing.JTextField();
+        btnHitung = new javax.swing.JButton();
+        btnBersihData = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Savoye LET", 1, 36)); // NOI18N
+        jLabel1.setText("Beauty Cashier App");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("MENU"));
+
+        jLabel2.setText("PERAWATAN");
+
+        jLabel3.setText("HARGA");
+
+        jComboBoxPilihanPerawatan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxPilihanPerawatan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxPilihanPerawatanActionPerformed(evt);
+            }
+        });
+
+        jTextFieldHarga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldHargaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(79, 79, 79)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxPilihanPerawatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jComboBoxPilihanPerawatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextFieldHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("KEANGGOTAAN"));
+        jPanel2.setPreferredSize(new java.awt.Dimension(210, 90));
+
+        jRadioButtonMember.setText("MEMBER");
+        jRadioButtonMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonMemberActionPerformed(evt);
+            }
+        });
+
+        jRadioButtonNonMember.setText("NON MEMBER");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButtonNonMember)
+                    .addComponent(jRadioButtonMember))
+                .addContainerGap(59, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jRadioButtonMember)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButtonNonMember)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("LAYANAN LAINNYA"));
+        jPanel3.setPreferredSize(new java.awt.Dimension(210, 90));
+
+        checkBoxSPA.setText("SPA");
+
+        checkBoxMassage.setText("MASSAGE");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkBoxMassage)
+                    .addComponent(checkBoxSPA))
+                .addContainerGap(92, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(checkBoxSPA)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkBoxMassage)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTextDiskon.setPreferredSize(new java.awt.Dimension(65, 25));
+        jTextDiskon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextDiskonActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("DISKON");
+
+        jLabel5.setText("TOTAL BAYAR");
+
+        jTextFieldTotalBayar.setPreferredSize(new java.awt.Dimension(65, 25));
+        jTextFieldTotalBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldTotalBayarActionPerformed(evt);
+            }
+        });
+
+        btnHitung.setText("HITUNG");
+        btnHitung.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHitungActionPerformed(evt);
+            }
+        });
+
+        btnBersihData.setText("BERSIH");
+        btnBersihData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBersihDataActionPerformed(evt);
+            }
+        });
+
+        btnExit.setText("KELUAR");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnHitung)
+                                .addGap(53, 53, 53)
+                                .addComponent(btnBersihData))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnExit)
+                                            .addComponent(jTextFieldTotalBayar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                        .addContainerGap(79, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(184, 184, 184))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jTextFieldTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnHitung)
+                    .addComponent(btnBersihData)
+                    .addComponent(btnExit))
+                .addContainerGap(48, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    // Method yang dipanggil saat tombol "Keluar" ditekan
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+        // Keluar dari aplikasi
+        System.exit(0);
+    }//GEN-LAST:event_btnExitActionPerformed
+
+    // Method yang dipanggil saat tombol "Bersih" ditekan
+    private void btnBersihDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBersihDataActionPerformed
+        bersihData();
+        aktif();
+        // Membersihkan seleksi pada JRadioButton dengan menghapus pemilihan dari ButtonGroup
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(jRadioButtonMember);
+        buttonGroup.add(jRadioButtonNonMember);
+        buttonGroup.clearSelection();
+    }//GEN-LAST:event_btnBersihDataActionPerformed
+
+    // Method untuk menghitung total bayar
+    private void calculateTotalBayar() {
+        // Ambil perawatan yang dipilih
+        String selectedItem = jComboBoxPilihanPerawatan.getSelectedItem().toString();
+        // Ambil harga perawatan dari objek salon
+        int hargaLayanan = salonService.getServicePrice(selectedItem);
+
+        // Inisialisasi biaya layanan lainnya
+        int biayaLayananLainnya = 0;
+        // Cek apakah layanan SPA dipilih, jika ya, tambahkan harga SPA
+        if (checkBoxSPA.isSelected()) {
+            biayaLayananLainnya += salonService.spaPrice();
+        }
+
+        // Cek apakah layanan Massage dipilih, jika ya, tambahkan harga Massage
+        if (checkBoxMassage.isSelected()) {
+            biayaLayananLainnya += salonService.massagePrice();
+        }
+
+        // Inisialisasi diskon
+        double diskon = 0;
+        // Jika yang dipilih adalah member, terapkan diskon
+        if (jRadioButtonMember.isSelected()) {
+            diskon = salonService.getMemberDiscount();
+        }
+
+        // Terapkan diskon ke harga layanan
+        double totalDiskon = hargaLayanan * diskon;
+        hargaLayanan -= totalDiskon;
+
+        // Jika bukan member, diskon diatur menjadi 0
+        if (!jRadioButtonMember.isSelected()) {
+            totalDiskon = 0;
+        }
+
+        // Hitung total pembayaran dengan mempertimbangkan harga layanan, biaya tambahan, dan diskon
+        double totalBayar = hargaLayanan + biayaLayananLainnya;
+        jTextFieldTotalBayar.setText(String.valueOf(totalBayar)); // Tampilkan total bayar
+        jTextDiskon.setText(String.valueOf((int) totalDiskon)); // Tampilkan nilai diskon sebagai string
+    }
+
+
+    private void jTextFieldTotalBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTotalBayarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldTotalBayarActionPerformed
+
+    // Method yang dipanggil saat tombol "Hitung" ditekan
+    private void btnHitungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitungActionPerformed
+        calculateTotalBayar();
+    }//GEN-LAST:event_btnHitungActionPerformed
+
+    private void jComboBoxPilihanPerawatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPilihanPerawatanActionPerformed
+        // Ambil perawatan yang dipilih
+        String selectedItem = jComboBoxPilihanPerawatan.getSelectedItem().toString();
+        // Ambil harga perawatan dari objek salon
+        int hargaLayanan = salonService.getServicePrice(selectedItem);
+        // Tampilkan harga perawatan di text field
+        jTextFieldHarga.setText(String.valueOf(hargaLayanan));
+    }//GEN-LAST:event_jComboBoxPilihanPerawatanActionPerformed
+
+    private void jTextFieldHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldHargaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldHargaActionPerformed
+
+    private void jTextDiskonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextDiskonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextDiskonActionPerformed
+
+    private void jRadioButtonMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMemberActionPerformed
+        // TODO add your handling code here:
+        // Set status member menjadi true dan non member menjadi false
+        salonService.setMemberStatus(true);
+        jRadioButtonNonMember.setSelected(false);
+    }//GEN-LAST:event_jRadioButtonMemberActionPerformed
+
+    // Method yang dipanggil saat tombol "Non Member" dipilih
+    private void jRadioButtonNonMemberActionPerformed(java.awt.event.ActionEvent evt) {
+        // Set status member menjadi false dan member menjadi true
+        salonService.setMemberStatus(false);
+        jRadioButtonMember.setSelected(false);
+        // Membersihkan seleksi jika jRadioButtonNonMember dipilih
+        jRadioButtonNonMember.setSelected(true);
+        // Membersihkan seleksi pada checkBoxes jika non-member dipilih
+        checkBoxSPA.setSelected(false);
+        checkBoxMassage.setSelected(false);
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    // Metode untuk menjalankan program
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Salon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Salon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Salon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Salon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Salon().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBersihData;
+    private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnHitung;
+    private javax.swing.JCheckBox checkBoxMassage;
+    private javax.swing.JCheckBox checkBoxSPA;
+    private javax.swing.JComboBox<String> jComboBoxPilihanPerawatan;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JRadioButton jRadioButtonMember;
+    private javax.swing.JRadioButton jRadioButtonNonMember;
+    private javax.swing.JTextField jTextDiskon;
+    private javax.swing.JTextField jTextFieldHarga;
+    private javax.swing.JTextField jTextFieldTotalBayar;
+    // End of variables declaration//GEN-END:variables
+
+    // Metode untuk membersihkan semua data pada GUI
+    private void bersihData() {
+        jTextFieldHarga.setText("");
+        jTextFieldTotalBayar.setText("");
+        jTextDiskon.setText("");
+        jComboBoxPilihanPerawatan.setSelectedIndex(0);
+        // Membersihkan seleksi pada checkBoxes
+        checkBoxSPA.setSelected(false);
+        checkBoxMassage.setSelected(false);
+    }
+
+    // Method aktif untuk mengaktifkan objek-objek di GUI
+    private void aktif() {
+        jComboBoxPilihanPerawatan.setEnabled(true);
+        jRadioButtonMember.setEnabled(true);
+        jRadioButtonNonMember.setEnabled(true);
+        checkBoxSPA.setEnabled(true);
+        checkBoxMassage.setEnabled(true);
+        jTextDiskon.setEnabled(true);
+        jTextFieldTotalBayar.setEnabled(true);
+        btnHitung.setEnabled(true);
+        btnBersihData.setEnabled(true);
+    }
+
+    // Metode untuk menonaktifkan semua komponen pada GUI
+    private void nonaktif() {
+        jComboBoxPilihanPerawatan.setEnabled(false);
+        jRadioButtonMember.setEnabled(false);
+        jRadioButtonNonMember.setEnabled(false);
+        checkBoxSPA.setEnabled(false);
+        checkBoxMassage.setEnabled(false);
+        jTextDiskon.setEnabled(false);
+        jTextFieldTotalBayar.setEnabled(false);
+        btnHitung.setEnabled(false);
+        btnBersihData.setEnabled(false);
+    }
+}
